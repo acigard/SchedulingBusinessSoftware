@@ -1,0 +1,48 @@
+﻿@model AccountViewModel
+
+
+@{
+    ViewData["Title"] = "SignUp";
+    Layout = "_LayoutAuthentification";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container mt-5">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-sm-12 col-md-12 col-md-4">
+                <h1 class="mb-3">SignUp</h1>
+                <form method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="@Model.Username">UserName</label>
+                        <input type="text" asp-for="Username" class="form-control name="username" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="@Model.Password">Password</label>
+                        <input type="password" asp-for="Password" class="form-control name="password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="@Model.Email"></label>
+                        <input type="text" asp-for="Email" class="form-control name="Email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="@Model.EmailConfirmed">EmailComfirmed</label>
+                        <input type="text" asp-for="EmailConfirmed" class="form-control name="EmailConfirmed" />
+                        <span asp-validation-for="EmailConfirmed" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">SignUp</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+}
