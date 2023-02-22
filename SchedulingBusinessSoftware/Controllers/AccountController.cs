@@ -147,7 +147,7 @@ namespace SchedulingBusinessSoftware.Controllers
                         await _signInManager.SignInAsync(user, isPersistent: false);
 
                         await _context.SaveChangesAsync();
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Appointment");
 
                     }
                     foreach (var error in result.Errors)
@@ -161,6 +161,7 @@ namespace SchedulingBusinessSoftware.Controllers
             }
             return View(model);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -51,10 +51,11 @@ namespace SchedulingBusinessSoftware.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddOrEdit(int Id, [Bind("Id, Title,Description,CreatedDate,UpdateDate,ScheduledAt")] Appointment appointment)
         {
- 
+
             bool isAppointmentExist = false;
 
             Appointment app = await _context.Appoitment.FindAsync(Id);
+            AppointmentViewModel model = _mapper.Map<AppointmentViewModel>(app);
 
             if (app != null)
             {
@@ -72,8 +73,8 @@ namespace SchedulingBusinessSoftware.Controllers
                     app.Id = Id;
                     app.Title = appointment.Title;
                     app.Description = appointment.Description;
-                    app.ScheduledAt= DateTime.Now;
-                    app.CreatedDate= DateTime.Now;  
+                    app.ScheduledAt = DateTime.Now;
+                    app.CreatedDate = DateTime.Now;
                     app.UpdatedDate = DateTime.Now;
 
                     if (isAppointmentExist)
@@ -92,19 +93,48 @@ namespace SchedulingBusinessSoftware.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            return View(model);
+        }
+
+        public async Task<IActionResult> Details(int Id)
+        {
+            if (Id == null)
+            {
+                return NotFound();
+            }
+
+            var appointment = await _context.Appoitment.FirstOrDefaultAsync(a => a.Id == Id);
+            AppointmentViewModel model = _mapper.Map<AppointmentViewModel>(appointment);
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
+        //GET Appointment for method Delete
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var app = await _context.Appoitment.FirstOrDefaultAsync(a => a.Id == id);
             return View(app);
         }
 
-        //public static Appointment GetAppointmentDetails()
-        //{
-        //    return new Appointment
-        //    {
-        //        Id = 1,
-        //        Title = "Proba",
-        //        Description = "ProbaProbaProba",
-        //        ScheduledAt = DateTime.Now,
-        //        CreatedDate = DateTime.Now
-        //    };
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int Id)
+        {
+            var appointment = await _context.Appoitment.FindAsync(Id);
+            _context.Appoitment.Remove(appointment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+
+        }
     }
 }
