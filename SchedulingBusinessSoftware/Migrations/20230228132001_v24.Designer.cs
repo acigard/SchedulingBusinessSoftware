@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SchedulingBusinessSoftware.Data.DbContexts;
 
@@ -11,9 +12,11 @@ using SchedulingBusinessSoftware.Data.DbContexts;
 namespace SchedulingBusinessSoftware.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230228132001_v24")]
+    partial class v24
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,29 +227,17 @@ namespace SchedulingBusinessSoftware.Migrations
                     b.ToTable("AccountToken", (string)null);
                 });
 
-            modelBuilder.Entity("SchedulingBusinessSoftware.Entities.ApplicationUsersAndAppointments", b =>
-                {
-                    b.Property<int>("Appointment")
-                        .HasColumnType("int");
-
-                    b.Property<string>("User")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable((string)null);
-
-                    b.ToView("VM_APPLICATIONUSERS_AND_APPOINTMENTS", (string)null);
-                });
-
             modelBuilder.Entity("SchedulingBusinessSoftware.Entities.Appointment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<string>("Candidate")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -271,34 +262,7 @@ namespace SchedulingBusinessSoftware.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Candidate");
-
                     b.ToTable("Appointment", (string)null);
-                });
-
-            modelBuilder.Entity("SchedulingBusinessSoftware.Entities.Interviewer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FistName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Interviewer", (string)null);
                 });
 
             modelBuilder.Entity("SchedulingBusinessSoftware.Entities.ApplicationRoleClaim", b =>
@@ -348,21 +312,6 @@ namespace SchedulingBusinessSoftware.Migrations
                     b.HasOne("SchedulingBusinessSoftware.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SchedulingBusinessSoftware.Entities.Appointment", b =>
-                {
-                    b.HasOne("SchedulingBusinessSoftware.Entities.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("Candidate")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SchedulingBusinessSoftware.Entities.Interviewer", null)
-                        .WithMany()
-                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

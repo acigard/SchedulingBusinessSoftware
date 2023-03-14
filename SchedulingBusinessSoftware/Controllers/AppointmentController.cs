@@ -12,7 +12,7 @@ namespace SchedulingBusinessSoftware.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-
+        
         public AppointmentController(AppDbContext context, IMapper mapper)
         {
             _context = context;
@@ -28,76 +28,33 @@ namespace SchedulingBusinessSoftware.Controllers
             //return View(result);
         }
 
-        public async Task<IActionResult> AddOrEdit(int? Id)
+        public async Task<IActionResult> Edit(int id)
         {
-            ViewBag.PageName = Id == null ? "Create Appointment" : "Edit Appointment";
-            ViewBag.isEdit = Id == null ? false : true;
-            if (Id == null)
+            var appointment = await _context.Appoitment.FindAsync(id);
+            if (appointment == null)
             {
-                return View();
-            }
-            else
-            {
-                var appointment = await _context.Appoitment.FindAsync(Id);
-                if (appointment == null)
-                {
-                    return NotFound();
-                }
-                return View();
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit(int Id, [Bind("Id, Title,Description,CreatedDate,UpdateDate,ScheduledAt")] Appointment appointment)
-        {
-
-            bool isAppointmentExist = false;
-
-            Appointment app = await _context.Appoitment.FindAsync(Id);
-            AppointmentViewModel model = _mapper.Map<AppointmentViewModel>(app);
-
-            if (app != null)
-            {
-                isAppointmentExist = true;
-            }
-            else
-            {
-                app = new Appointment();
+                return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    app.Id = Id;
-                    app.Title = appointment.Title;
-                    app.Description = appointment.Description;
-                    app.ScheduledAt = DateTime.Now;
-                    app.CreatedDate = DateTime.Now;
-                    app.UpdatedDate = DateTime.Now;
+            var model = _mapper.Map<AppointmentViewModel>(appointment);
 
-                    if (isAppointmentExist)
-                    {
-                        _context.Update(app);
-                    }
-                    else
-                    {
-                        _context.Add(app);
-                    }
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    throw;
-                }
-                return RedirectToAction(nameof(Index));
-            }
             return View(model);
         }
 
         public async Task<IActionResult> Details(int Id)
         {
+
+            List<Interviewer> interviewers = new List<Interviewer>()
+            {
+                new Interviewer()
+                {
+                    Id = Id,
+                    FistName = "FName",
+                    LastName = "LName",
+                    Position = "Recruiter"
+                },
+            };
+
             if (Id == null)
             {
                 return NotFound();

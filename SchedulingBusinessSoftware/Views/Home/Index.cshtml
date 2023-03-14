@@ -1,17 +1,25 @@
-﻿
+﻿@model IndexViewModel
 @{
     ViewData["Title"] = "Home";
     Layout = "_Layout";
 }
 
-<div class="row">
+@{
+    string prevTitle = "";
+}
+
+
+@foreach (var appointment in Model.UserAppointments)
+{
+    if (appointment.Title != prevTitle)
+    {
         <div class="col-md-4 col-xs-6 border-primary mb-3">
             <div class="card mb-3" style="max-width: 540px;">
                 <div class="row g-0">
                     <div class="col-md-12">
                         <div class="card-header text-white bg-info">
                             <p class="card-text">
-                                <h5 class="card-title"> </h5>
+                                <h5 class="card-title">@appointment.Title</h5>
                             </p>
                         </div>
                     </div>
@@ -20,263 +28,102 @@
                     </div>
                     <div class="col-md-6">
                         <div class="card-body">
-                            <p class="card-text">Title</p>
-                            <p class="card-text"><b>Category: Technical Interview </b></p>
-                            <p class="card-text"><b>Created At: </p>
-                            <p class="card-text"><b>Scheduled At: </b></p>
+                            <p class="card-text"><b>Category: </b>@appointment.Type</p>
+                            <p class="card-text"><b>Created At: </b>@appointment.CreatedDate</p>
+                            <p class="card-text"><b>Scheduled At: </b>@appointment.ScheduledAt</p>
                             <p class="card-text ">
-                               @* @if (DateTime.Now >= item.CreatedAt && DateTime.Now <= item.ScheduledAt)
+                                @if (DateTime.Now >= appointment.CreatedDate && DateTime.Now <= appointment.ScheduledAt)
                                 {
                                     <span class="badge bg-success text-white">AVAILABLE</span>
                                 }
-                                else if (DateTime.Now > item.ScheduledAt)
+                                else if (DateTime.Now > appointment.ScheduledAt)
                                 {
                                     <span class="badge bg-success text-white">EXPIRED</span>
                                 }
                                 else
                                 {
                                     <span class="badge bg-success text-white">UPCOMING</span>
-                                }*@
+                                }
                             </p>
-
                         </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card-footer ">
-                            <p class="card-text">
-                                <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="">
-                                    <i class="bi bi-eye-fill"></i> Show Details
-                                </a>
-                                <a class="btn btn-success text-white"
-                               asp-controller="Appointment"
-                               asp-action="AddOrEdit"
-                               asp-route-id="">
-                                    <i class="bi bi-cart-plus"></i> Edit Appointment
-                                </a>
-                            </p>
+
+                        <div class="col-md-12">
+                            <div class="card-footer ">
+                                <p class="card-text">
+                                    @if (DateTime.Now >= appointment.CreatedDate && DateTime.Now <= appointment.ScheduledAt)
+                                    {
+                                        <a class="btn btn-outline-primary float-right" asp-controller="Appointment" asp-action="Details" asp-route-id="@appointment.Id">
+                                            <i class="bi bi-eye-fill"></i> Show Details
+                                        </a>
+                                        <a class="btn btn-success text-white"
+                                                asp-controller="Appointment"
+                                                asp-action="Edit"
+                                                asp-route-id="@appointment.Id">
+                                            <i class="bi bi-cart-plus"></i> Edit Appointment
+                                        </a>
+                                    }
+                                    else if (DateTime.Now > appointment.ScheduledAt)
+                                    {
+                                        <a class="btn btn-outline-primary float-right" asp-controller="Appointment" asp-action="Details" asp-route-id="@appointment.Id">
+                                            <i class="bi bi-eye-fill"></i> Show Details
+                                        </a>
+                                    }
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 col-xs-6 border-primary mb-3">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-12">
-                        <div class="card-header text-white bg-info">
-                            <p class="card-text">
-                                <h5 class="card-title">
-                                </h5>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <img src="/css/pic1.jpg" width="100%" />
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card-body">
-                            <p class="card-text">Open position: Software Engineer</p>
-                            <p class="card-text"><b>Category: Technical Interview </b></p>
-                            <p class="card-text"><b>Start Date: </b></p>
-                            <p class="card-text"><b>End Date: </b></p>
-                            <p class="card-text ">
-                                <b>Status: Upcoming </b>
-                            </p>
 
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card-footer ">
-                            <p class="card-text">
-                                <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="">
-                                    <i class="bi bi-eye-fill"></i> Show Details
-                                </a>
-                                <a class="btn btn-success text-white"
-                               asp-controller="Appointment"
-                               asp-action="AddOrEdit"
-                               asp-route-id="">
-                                    <i class="bi bi-cart-plus"></i> Edit Appointment
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-xs-6 border-primary mb-3">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-12">
-                        <div class="card-header text-white bg-info">
-                            <p class="card-text">
-                                <h5 class="card-title">
-                                </h5>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <img src="/css/pic1.jpg" width="100%" />
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card-body">
-                            <p class="card-text">Open position: Software Engineer</p>
-                            <p class="card-text"><b>Category: Technical Interview </b></p>
-                            <p class="card-text"><b>Start Date: </b></p>
-                            <p class="card-text"><b>End Date: </b></p>
-                            <p class="card-text ">
-                                <b>Status: Upcoming </b>
-                            </p>
+        prevTitle = appointment.Title;
+    }
+}
 
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card-footer ">
-                            <p class="card-text">
-                                <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="">
-                                    <i class="bi bi-eye-fill"></i> Show Details
-                                </a>
-                                <a class="btn btn-success text-white"
-                               asp-controller="Appointment"
-                               asp-action="AddOrEdit"
-                               asp-route-id="">
-                                    <i class="bi bi-cart-plus"></i> Edit Appointment
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-xs-6 border-primary mb-3">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-12">
-                        <div class="card-header text-white bg-info">
-                            <p class="card-text">
-                                <h5 class="card-title">
-                                </h5>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <img src="/css/pic1.jpg" width="100%" />
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card-body">
-                            <p class="card-text">Open position: Software Engineer</p>
-                            <p class="card-text"><b>Category: Technical Interview </b></p>
-                            <p class="card-text"><b>Start Date: </b></p>
-                            <p class="card-text"><b>End Date: </b></p>
-                            <p class="card-text ">
-                                <b>Status: Upcoming </b>
-                            </p>
 
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card-footer ">
-                            <p class="card-text">
-                                <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="">
-                                    <i class="bi bi-eye-fill"></i> Show Details
-                                </a>
-                                <a class="btn btn-success text-white"
-                               asp-controller="Appointment"
-                               asp-action="AddOrEdit"
-                               asp-route-id="">
-                                    <i class="bi bi-cart-plus"></i> Edit Appointment
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-xs-6 border-primary mb-3">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-12">
-                        <div class="card-header text-white bg-info">
-                            <p class="card-text">
-                                <h5 class="card-title">
-                                </h5>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <img src="/css/pic1.jpg" width="100%" />
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card-body">
-                            <p class="card-text">Open position: Software Engineer</p>
-                            <p class="card-text"><b>Category: Technical Interview </b></p>
-                            <p class="card-text"><b>Start Date: </b></p>
-                            <p class="card-text"><b>End Date: </b></p>
-                            <p class="card-text ">
-                                <b>Status: Upcoming </b>
-                            </p>
 
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card-footer ">
-                            <p class="card-text">
-                                <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="">
-                                    <i class="bi bi-eye-fill"></i> Show Details
-                                </a>
-                                <a class="btn btn-success text-white"
-                               asp-controller="Appointment"
-                               asp-action="AddOrEdit"
-                               asp-route-id="">
-                                    <i class="bi bi-cart-plus"></i> Edit Appointment
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-xs-6 border-primary mb-3">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-12">
-                        <div class="card-header text-white bg-info">
-                            <p class="card-text">
-                                <h5 class="card-title">
-                                </h5>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <img src="/css/pic1.jpg" width="100%" />
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card-body">
-                            <p class="card-text">Open position: Software Engineer</p>
-                            <p class="card-text"><b>Category: Technical Interview </b></p>
-                            <p class="card-text"><b>Start Date: </b></p>
-                            <p class="card-text"><b>End Date: </b></p>
-                            <p class="card-text ">
-                                <b>Status: Upcoming </b>
-                            </p>
 
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card-footer ">
-                            <p class="card-text">
-                                <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="">
-                                    <i class="bi bi-eye-fill"></i> Show Details
-                                </a>
-                                <a class="btn btn-success text-white"
-                               asp-controller="Appointment"
-                               asp-action="AddOrEdit"
-                               asp-route-id="">
-                                    <i class="bi bi-cart-plus"></i> Edit Appointment
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-</div>
+
+
+
+
+@*<h2>Appointments for @User.Identity.Name</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                "Title""
+            </th>
+            <th>
+                "Type"
+            </th>
+            <th>
+                "CreatedAt"
+            </th>
+            <th>
+                "ScheduletAt"
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model.UserAppointments)
+        {
+            <tr>
+                <th>
+                   @item.Title
+                </th>
+                <td>
+                    @item.Type
+                </td>
+                <td>
+                    @item.CreatedDate
+                </td>
+                <td>
+                    @item.ScheduledAt
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>*@

@@ -15,8 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-//builder.Services.AddTransient<AccountService>();
 builder.Services.AddTransient<IAppDbContext, AppDbContext>();
 builder.Services.AddScoped<AppointmentSeeader>();
 builder.Services.AddConfigurationService(builder.Configuration);
@@ -30,13 +28,9 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(59);
 });
 
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope()) 
-{ var initialiser = scope.ServiceProvider.GetRequiredService<AppointmentSeeader>(); await initialiser.SeedData(); }
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

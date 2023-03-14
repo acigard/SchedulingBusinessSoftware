@@ -18,7 +18,9 @@ namespace SchedulingBusinessSoftware.Data.DbContexts
         }
 
         public DbSet<Appointment> Appoitment { get; set; }
+        public DbSet<Interviewer> Interviewer { get; set; }
 
+        public DbSet<ApplicationUsersAndAppointments> VM_ApplicationUsers_And_Appointments { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -96,6 +98,15 @@ namespace SchedulingBusinessSoftware.Data.DbContexts
                 b.ToTable("RoleClaim");
             });
 
+            builder.Entity<Interviewer>(b =>
+            {
+                b.HasKey(a => a.Id);
+                b.ToTable("Interviewer");
+
+                b.HasMany<Appointment>().WithOne().HasForeignKey(ap => ap.Id).IsRequired();
+
+            });
+
             builder.Entity<ApplicationUserRole>(b =>
             {
                 b.HasKey(r => new { r.UserId, r.RoleId });
@@ -108,28 +119,23 @@ namespace SchedulingBusinessSoftware.Data.DbContexts
                 a.HasKey(a => a.Id);
                 a.ToTable("Appointment");
                 a.Property(x => x.Id).ValueGeneratedOnAdd();
-                //a.HasData
-                //(
-                //new Appointment
-                //{
-                //    Title = "Appointment1",
-                //    Description = "Description Appointment",
-                //    CreatedDate = new DateTime(),
-                //    UpdatedDate = new DateTime(),
-                //    ScheduledAt = new DateTime()
-                //},
-                //      new Appointment
-                //      {
-                //          Title = "Appointment2",
-                //          Description = "Description Appointment2",
-                //          CreatedDate = new DateTime(2023, 8, 2),
-                //          UpdatedDate = new DateTime(2023, 8, 2),
-                //          ScheduledAt = new DateTime(2023, 3, 3)
-                //      }
-                //    );
-            }
-            );
+                a.HasOne<ApplicationUser>().WithMany().HasForeignKey(ax => ax.Candidate).IsRequired();
+
+                //a.Property(t => t.AppointmentType) 
+                //.HasConversion(
+                //    t => t.ToString(),
+                //    t => (SchedulingBusinessSoftware.Entities.Appointment.Type)Enum.Parse(typeof(Type), t));
+
+            });
+
+            builder.Entity<ApplicationUsersAndAppointments>(aa =>
+            {
+                aa.HasNoKey();
+                aa.ToView("VM_APPLICATIONUSERS_AND_APPOINTMENTS");
+            });
         }
+
+       
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return await base.SaveChangesAsync(cancellationToken);

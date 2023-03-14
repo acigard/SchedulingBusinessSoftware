@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SchedulingBusinessSoftware.Data.DbContexts;
 
@@ -11,9 +12,11 @@ using SchedulingBusinessSoftware.Data.DbContexts;
 namespace SchedulingBusinessSoftware.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230303130548_v30")]
+    partial class v30
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,20 +225,6 @@ namespace SchedulingBusinessSoftware.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AccountToken", (string)null);
-                });
-
-            modelBuilder.Entity("SchedulingBusinessSoftware.Entities.ApplicationUsersAndAppointments", b =>
-                {
-                    b.Property<int>("Appointment")
-                        .HasColumnType("int");
-
-                    b.Property<string>("User")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable((string)null);
-
-                    b.ToView("VM_APPLICATIONUSERS_AND_APPOINTMENTS", (string)null);
                 });
 
             modelBuilder.Entity("SchedulingBusinessSoftware.Entities.Appointment", b =>

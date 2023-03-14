@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SchedulingBusinessSoftware.Data.DbContexts;
+using SchedulingBusinessSoftware.Data.Seeder;
 using SchedulingBusinessSoftware.Models;
 //using SchedulingBusinessSoftware.Services;
 using System.Diagnostics;
@@ -9,24 +12,31 @@ namespace SchedulingBusinessSoftware.Controllers
 
     {
         private readonly ILogger<HomeController> _logger;
-       // private readonly AccountService _accountService;
+        private readonly AppointmentSeeader _appointmentSeeader;
+        private readonly AppDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger) // AccountService accountService)
+        public HomeController(ILogger<HomeController> logger, AppointmentSeeader appointmentSeeader, AppDbContext context) 
         {
             _logger = logger;
-           // _accountService = accountService;
+            _appointmentSeeader = appointmentSeeader;
+            _context = context;
         }
-       
-        /*public IActionResult Index()
-        {
-            var x = _accountService.SignUp(new Account { UserName = "test", Password = "test123" });
 
-            return View();
-        }*/
-
-        public IActionResult Index()
+        //the db will show the logged user by using httpContext
+        public async Task <IActionResult> Index()
         {
-            return View();
+            string userName = HttpContext.User.Identity.Name;
+            var result = await _appointmentSeeader.SeedData(userName);
+
+            var userAppointment = _context.Appoitment.Where(a => a.Candidate == userName).Take(5).ToList();
+
+            var viewModel = new IndexViewModel
+            {
+                UserAppointments = userAppointment
+            };
+           
+
+            return View(viewModel);
         }
 
         public IActionResult Privacy()
